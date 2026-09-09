@@ -1,5 +1,5 @@
 ```yaml
-name: Build and Deploy to EKS
+name: Debug GitHub OIDC
 
 on:
   push:
@@ -10,25 +10,18 @@ permissions:
   contents: read
   id-token: write
 
-env:
-  AWS_REGION: ap-south-1
-  ECR_REPOSITORY: devops-eks-app
-  EKS_CLUSTER_NAME: devops-eks-cluster
-  DEPLOYMENT_NAME: devops-eks-app
-  CONTAINER_NAME: devops-eks-app
-
 jobs:
-  build-and-deploy:
-    name: Build, Push and Deploy
+  debug-oidc:
+    name: Debug OIDC Claims
     runs-on: ubuntu-latest
 
     steps:
 
-      # 1. Checkout source code
+      # 1. Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Debug GitHub OIDC claims
+      # 2. Read GitHub OIDC token claims
       - name: Debug GitHub OIDC claims
         env:
           ACTIONS_ID_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
@@ -41,49 +34,12 @@ jobs:
 
           PAYLOAD=$(echo "$TOKEN" | cut -d '.' -f2)
 
-          echo "$PAYLOAD" | base64 -d 2>/dev/null | jq '{sub, aud, repository, repository_owner}'
+          # Add Base64 padding if required
+          PADDING=$((4 - ${#PAYLOAD} % 4))
+          if [ "$PADDING" -ne 4 ]; then
+            PAYLOAD="${PAYLOAD}$(printf '=%.0s' $(seq 1 $PADDING))"
+          fi
 
-           # 3. Configure AWS using GitHub OIDC
-      # - name: Configure AWS credentials
-      #   uses: aws-actions/configure-aws-credentials@v6
-      #   with:
-      #     role-to-assume: arn:aws:iam::099739122394:role/GitHubActionsEKSDeployRole
-      #     aws-region: ${{ env.AWS_REGION }}
-
-      # 4. Login to Amazon ECR
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
-      # 5. Build and push Docker image
-      - name: Build and push Docker image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./Application
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-      # 6. Configure kubectl for EKS
-      - name: Update kubeconfig
-        run: |
-          aws eks update-kubeconfig \
-            --region $AWS_REGION \
-            --name $EKS_CLUSTER_NAME
-
-      # 7. Deploy application
-      - name: Deploy application
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          kubectl set image deployment/$DEPLOYMENT_NAME \
-            $CONTAINER_NAME=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-      # 8. Wait for deployment
-      - name: Verify deployment
-        run: |
-          kubectl rollout status deployment/$DEPLOYMENT_NAME --timeout=180s
-          kubectl get pods
-          kubectl get deployment $DEPLOYMENT_NAME
+          echo "$PAYLOAD" | tr '_-' '/+' | base64 -d 2>/dev/null | \
+            jq '{sub, aud, repository, repository_owner}'
 ```
