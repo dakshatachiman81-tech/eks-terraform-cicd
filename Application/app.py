@@ -23,8 +23,8 @@ def home():
 
         body {
             font-family: "Segoe UI", Arial, sans-serif;
-            background: linear-gradient(135deg, #020617, #0f172a, #172554);
-            color: #e5e7eb;
+            background: linear-gradient(135deg, #eff6ff, #f5f3ff, #e0f2fe);
+            color: #1e293b;
             min-height: 100vh;
         }
 
@@ -37,8 +37,8 @@ def home():
         /* Header */
 
         header {
-            border-bottom: 1px solid #1e3a5f;
-            background: rgba(2, 6, 23, 0.95);
+            border-bottom: 1px solid #dbeafe;
+            background: rgba(255, 255, 255, 0.95);
         }
 
         .navbar {
@@ -51,12 +51,12 @@ def home():
         .logo {
             font-size: 21px;
             font-weight: 700;
-            color: #ffffff;
+            color: #172554;
             letter-spacing: 0.5px;
         }
 
         .logo span {
-            color: #38bdf8;
+            color: #2563eb;
         }
 
         .status {
@@ -64,7 +64,7 @@ def home():
             align-items: center;
             gap: 8px;
             font-size: 14px;
-            color: #94a3b8;
+            color: #64748b;
         }
 
         .status-dot {
@@ -72,7 +72,7 @@ def home():
             height: 9px;
             background: #22c55e;
             border-radius: 50%;
-            box-shadow: 0 0 10px #22c55e;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
         }
 
         /* Hero */
@@ -85,30 +85,30 @@ def home():
         .badge {
             display: inline-block;
             padding: 7px 15px;
-            border: 1px solid #2563eb;
+            border: 1px solid #93c5fd;
             border-radius: 20px;
-            color: #38bdf8;
+            color: #2563eb;
             font-size: 13px;
             margin-bottom: 22px;
-            background: rgba(15, 23, 42, 0.75);
+            background: rgba(239, 246, 255, 0.9);
         }
 
         .hero h1 {
             font-size: clamp(38px, 6vw, 64px);
             line-height: 1.1;
             font-weight: 750;
-            color: #ffffff;
+            color: #172554;
             margin-bottom: 20px;
         }
 
         .hero h1 span {
-            color: #38bdf8;
+            color: #2563eb;
         }
 
         .hero p {
             max-width: 650px;
             margin: auto;
-            color: #94a3b8;
+            color: #64748b;
             font-size: 17px;
             line-height: 1.7;
         }
@@ -123,17 +123,18 @@ def home():
         }
 
         .card {
-            background: rgba(15, 23, 42, 0.85);
-            border: 1px solid #1e3a5f;
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid #dbeafe;
             border-radius: 12px;
             padding: 25px;
             transition: 0.25s ease;
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.06);
         }
 
         .card:hover {
             transform: translateY(-4px);
-            border-color: #38bdf8;
-            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.12);
+            border-color: #60a5fa;
+            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.12);
         }
 
         .icon {
@@ -142,7 +143,7 @@ def home():
         }
 
         .card h3 {
-            color: #ffffff;
+            color: #172554;
             font-size: 17px;
             margin-bottom: 8px;
         }
@@ -153,7 +154,7 @@ def home():
         }
 
         .card .online {
-            color: #22c55e;
+            color: #16a34a;
             font-size: 13px;
             margin-top: 14px;
             font-weight: 600;
@@ -162,16 +163,17 @@ def home():
         /* Architecture */
 
         .architecture {
-            background: rgba(15, 23, 42, 0.85);
-            border: 1px solid #1e3a5f;
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid #dbeafe;
             border-radius: 14px;
             padding: 35px;
             margin-bottom: 70px;
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.06);
         }
 
         .architecture h2 {
             text-align: center;
-            color: #ffffff;
+            color: #172554;
             margin-bottom: 30px;
             font-size: 25px;
         }
@@ -186,15 +188,16 @@ def home():
 
         .flow-item {
             padding: 13px 18px;
-            background: #172554;
-            border: 1px solid #2563eb;
+            background: #eff6ff;
+            border: 1px solid #93c5fd;
             border-radius: 8px;
             font-size: 14px;
-            color: #cbd5e1;
+            color: #1e40af;
+            font-weight: 500;
         }
 
         .arrow {
-            color: #38bdf8;
+            color: #2563eb;
             font-size: 20px;
         }
 
@@ -206,7 +209,7 @@ def home():
         }
 
         .health h2 {
-            color: #ffffff;
+            color: #172554;
             margin-bottom: 12px;
         }
 
@@ -218,24 +221,26 @@ def home():
         .health-button {
             display: inline-block;
             padding: 11px 22px;
-            background: #0f766e;
+            background: #2563eb;
             color: white;
             text-decoration: none;
             border-radius: 7px;
             font-size: 14px;
             font-weight: 600;
             transition: 0.2s ease;
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.2);
         }
 
         .health-button:hover {
-            background: #14b8a6;
+            background: #1d4ed8;
+            transform: translateY(-2px);
         }
 
         /* Footer */
 
         footer {
-            border-top: 1px solid #1e3a5f;
-            background: rgba(2, 6, 23, 0.95);
+            border-top: 1px solid #dbeafe;
+            background: rgba(255, 255, 255, 0.95);
             padding: 25px 0;
             text-align: center;
             color: #64748b;
@@ -243,7 +248,7 @@ def home():
         }
 
         footer span {
-            color: #38bdf8;
+            color: #2563eb;
         }
 
         /* Responsive */
@@ -274,6 +279,7 @@ def home():
 
 <header>
     <div class="container navbar">
+
         <div class="logo">
             Cloud<span>Ops</span>
         </div>
@@ -282,6 +288,7 @@ def home():
             <div class="status-dot"></div>
             System Operational
         </div>
+
     </div>
 </header>
 
