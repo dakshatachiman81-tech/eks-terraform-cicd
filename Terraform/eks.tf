@@ -12,24 +12,39 @@ module "eks" {
 
   enable_cluster_creator_admin_permissions = true
 
+  access_entries = {
+    github_actions = {
+      principal_arn = aws_iam_role.github_actions.arn
+
+      policy_associations = {
+        admin = {
+          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+
+          access_scope = {
+            type = "cluster"
+          }
+        }
+      }
+    }
+  }
+
   addons = {
-  vpc-cni = {
-    most_recent    = true
-    before_compute = true
-  }
+    vpc-cni = {
+      most_recent    = true
+      before_compute = true
+    }
 
-  kube-proxy = {
-    most_recent = true
-  }
+    kube-proxy = {
+      most_recent = true
+    }
 
-  coredns = {
-    most_recent = true
+    coredns = {
+      most_recent = true
+    }
   }
-}
 
   eks_managed_node_groups = {
     devops_nodes = {
-
       name = "devops-node-group"
 
       instance_types = ["t3.small"]
