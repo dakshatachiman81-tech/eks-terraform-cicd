@@ -23,7 +23,7 @@ def home():
 
         body {
             font-family: "Segoe UI", Arial, sans-serif;
-            background: #0b1220;
+            background: linear-gradient(135deg, #020617, #0f172a, #172554);
             color: #e5e7eb;
             min-height: 100vh;
         }
@@ -37,8 +37,8 @@ def home():
         /* Header */
 
         header {
-            border-bottom: 1px solid #1f2937;
-            background: #0f172a;
+            border-bottom: 1px solid #1e3a5f;
+            background: rgba(2, 6, 23, 0.95);
         }
 
         .navbar {
@@ -85,12 +85,12 @@ def home():
         .badge {
             display: inline-block;
             padding: 7px 15px;
-            border: 1px solid #334155;
+            border: 1px solid #2563eb;
             border-radius: 20px;
             color: #38bdf8;
             font-size: 13px;
             margin-bottom: 22px;
-            background: #111c30;
+            background: rgba(15, 23, 42, 0.75);
         }
 
         .hero h1 {
@@ -123,8 +123,8 @@ def home():
         }
 
         .card {
-            background: #111827;
-            border: 1px solid #1f2937;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid #1e3a5f;
             border-radius: 12px;
             padding: 25px;
             transition: 0.25s ease;
@@ -132,7 +132,8 @@ def home():
 
         .card:hover {
             transform: translateY(-4px);
-            border-color: #334155;
+            border-color: #38bdf8;
+            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.12);
         }
 
         .icon {
@@ -161,8 +162,8 @@ def home():
         /* Architecture */
 
         .architecture {
-            background: #0f172a;
-            border: 1px solid #1f2937;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid #1e3a5f;
             border-radius: 14px;
             padding: 35px;
             margin-bottom: 70px;
@@ -185,8 +186,8 @@ def home():
 
         .flow-item {
             padding: 13px 18px;
-            background: #172033;
-            border: 1px solid #334155;
+            background: #172554;
+            border: 1px solid #2563eb;
             border-radius: 8px;
             font-size: 14px;
             color: #cbd5e1;
@@ -223,13 +224,18 @@ def home():
             border-radius: 7px;
             font-size: 14px;
             font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .health-button:hover {
+            background: #14b8a6;
         }
 
         /* Footer */
 
         footer {
-            border-top: 1px solid #1f2937;
-            background: #0f172a;
+            border-top: 1px solid #1e3a5f;
+            background: rgba(2, 6, 23, 0.95);
             padding: 25px 0;
             text-align: center;
             color: #64748b;
