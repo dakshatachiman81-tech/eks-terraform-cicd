@@ -1,4 +1,4 @@
-name: Test GitHub OIDC
+name: EKS Terraform CI/CD
 
 on:
   push:
@@ -9,12 +9,21 @@ permissions:
   contents: read
   id-token: write
 
+env:
+  AWS_REGION: ap-south-1
+  ECR_REPOSITORY: devops-eks-app
+  EKS_CLUSTER_NAME: devops-eks-cluster
+  K8S_NAMESPACE: default
+  DEPLOYMENT_NAME: devops-eks-app
+  CONTAINER_NAME: devops-eks-app
+
 jobs:
-  test-aws-oidc:
-    name: Test AWS OIDC
+  deploy:
+    name: Build and Deploy to EKS
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -22,8 +31,50 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: ap-south-1
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Verify AWS identity
         run: |
           aws sts get-caller-identity
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} \
+            -t ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest \
+            ./Application
+
+      - name: Push Docker image to ECR
+        run: |
+          docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+          docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
+
+      - name: Configure kubectl
+        run: |
+          aws eks update-kubeconfig \
+            --region ${{ env.AWS_REGION }} \
+            --name ${{ env.EKS_CLUSTER_NAME }}
+
+      - name: Verify EKS connection
+        run: |
+          kubectl get nodes
+          kubectl get deployment ${{ env.DEPLOYMENT_NAME }} \
+            -n ${{ env.K8S_NAMESPACE }}
+
+      - name: Deploy new image
+        run: |
+          kubectl set image deployment/${{ env.DEPLOYMENT_NAME }} \
+            ${{ env.CONTAINER_NAME }}=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} \
+            -n ${{ env.K8S_NAMESPACE }}
+
+      - name: Verify deployment
+        run: |
+          kubectl rollout status deployment/${{ env.DEPLOYMENT_NAME }} \
+            -n ${{ env.K8S_NAMESPACE }} \
+            --timeout=180s
+
+          kubectl get pods -n ${{ env.K8S_NAMESPACE }} -o wide
