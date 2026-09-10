@@ -302,8 +302,8 @@ def home():
         </div>
 
         <h1>
-            Modern Infrastructure.<br>
-            <span>Automated Delivery.</span>
+          Modern Infrastructure.<br>
+          <span>Automated Delivery. - v3</span>
         </h1>
 
         <p>
