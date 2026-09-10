@@ -1,4 +1,4 @@
-name: Debug GitHub OIDC
+name: Test GitHub OIDC
 
 on:
   push:
@@ -10,41 +10,20 @@ permissions:
   id-token: write
 
 jobs:
-  debug-oidc:
-    name: Debug OIDC Claims
+  test-aws-oidc:
+    name: Test AWS OIDC
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Debug GitHub OIDC claims
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ap-south-1
+
+      - name: Verify AWS identity
         run: |
-          echo "Requesting GitHub OIDC token..."
-
-          TOKEN=$(curl -sS \
-            -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=sts.amazonaws.com" \
-            | jq -r '.value')
-
-          if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
-            echo "ERROR: Failed to obtain OIDC token"
-            exit 1
-          fi
-
-          PAYLOAD=$(printf '%s' "$TOKEN" | cut -d '.' -f2 | tr '_-' '/+')
-
-          case $((${#PAYLOAD} % 4)) in
-            2) PAYLOAD="${PAYLOAD}==" ;;
-            3) PAYLOAD="${PAYLOAD}=" ;;
-          esac
-
-          echo "GitHub OIDC claims:"
-          printf '%s' "$PAYLOAD" | base64 -d | jq '{
-            sub,
-            aud,
-            repository,
-            repository_owner,
-            repository_id,
-            repository_owner_id
-          }'
+          aws sts get-caller-identity
